@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="personal.mapper.TPermissionFunctionMapper">
+    <resultMap id="BaseResultMap" type="personal.entity.TPermissionFunction">
+        <result column="permission_id" jdbcType="BIGINT" property="permissionId"/>
+        <result column="function_id" jdbcType="BIGINT" property="functionId"/>
+    </resultMap>
+    <insert id="insert" parameterType="personal.entity.TPermissionFunction">
+    insert into base_permission_function (permission_id, function_id)
+    values (#{permissionId,jdbcType=BIGINT}, #{functionId,jdbcType=BIGINT})
+  </insert>
+    <insert id="insertSelective" parameterType="personal.entity.TPermissionFunction">
+        insert into base_permission_function
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permissionId != null">
+                permission_id,
+            </if>
+            <if test="functionId != null">
+                function_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="permissionId != null">
+                #{permissionId,jdbcType=BIGINT},
+            </if>
+            <if test="functionId != null">
+                #{functionId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+</mapper>
