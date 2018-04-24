@@ -1,12 +1,6 @@
-server:
-  port: 8088
-
+## config
 spring:
   datasource:
-    name: dev
-    url: jdbc:mysql://127.0.0.1:3306/personal
-    username: root
-    password: root
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
     filters: stat
@@ -22,6 +16,8 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
+  profiles:
+    active: dev
 
 mybatis:
   mapper-locations: classpath:mapping/*.xml
@@ -34,5 +30,10 @@ pagehelper:
   row-bounds-with-count: false
   page-size-zero: true
   support-methods-arguments: false
+
+server:
+  servlet:
+    session:
+      timeout: 30
 
 

@@ -1,0 +1,10 @@
+## dev
+server:
+  port: 8080
+
+spring:
+  datasource:
+    name: dev
+    url: jdbc:mysql://127.0.0.1:3306/personal
+    username: root
+    password: root

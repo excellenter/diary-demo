@@ -1,7 +1,6 @@
-package personal.mapper;
+package personal.service;
 
-public interface TBaseMapper<T, PK> {
-
+public interface BaseService<T, PK> {
     Integer deleteById(PK id);
 
     Integer insert(T t);
