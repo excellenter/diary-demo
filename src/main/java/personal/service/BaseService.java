@@ -1,15 +1,31 @@
 package personal.service;
 
-public interface BaseService<T, PK> {
-    Integer deleteById(PK id);
+import java.util.List;
+
+public interface BaseService<T, ID> {
 
     Integer insert(T t);
 
-    Integer insertSelective(T t);
+    Integer insertBatch(List<T> ts);
 
-    T getById(PK id);
+    Integer deleteBatchInId(List<ID> ids);
 
-    Integer updateByIdSelective(T t);
+    Integer deleteInId(ID id);
 
-    Integer updateById(T t);
+    Integer update(T t);
+
+    Integer updateBatch(List<T> ts);
+
+    T getInId(ID id);
+
+    List<T> listInIds(List<ID> ids);
+
+    /**
+     * 查询所有(无分页慎用)
+     *
+     * @return
+     */
+    List<T> list();
+
+    Long countInId(ID id);
 }

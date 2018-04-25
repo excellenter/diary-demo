@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="personal.mapper.TUserMapper">
+
     <resultMap id="BaseResultMap" type="personal.entity.TUser">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
@@ -22,37 +23,13 @@
         <result column="login_time" jdbcType="TIMESTAMP" property="loginTime"/>
         <result column="image" jdbcType="VARCHAR" property="image"/>
     </resultMap>
+
     <sql id="Base_Column_List">
     id, username, password, nickname, email, tel, gender, qq, wechat, create_time, login_ip, 
     login_status, status, token, address, remark, birth, login_time, image
-  </sql>
-    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from base_user
-        where id = #{id,jdbcType=VARCHAR}
-    </select>
-    <delete id="deleteById" parameterType="java.lang.String">
-    delete from base_user
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
+    </sql>
+
     <insert id="insert" parameterType="personal.entity.TUser">
-    insert into base_user (id, username, password, 
-      nickname, email, tel, 
-      gender, qq, wechat, 
-      create_time, login_ip, login_status, 
-      status, token, address, 
-      remark, birth, login_time, 
-      image)
-    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{nickname,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=INTEGER}, #{qq,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{loginIp,jdbcType=VARCHAR}, #{loginStatus,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{birth,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP}, 
-      #{image,jdbcType=VARCHAR})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TUser">
         insert into base_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -173,7 +150,35 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByIdSelective" parameterType="personal.entity.TUser">
+
+    <insert id="insertBatch">
+        insert into base_user (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="ts" item="t" index="index" separator=",">
+            (#{t.id,jdbcType=VARCHAR}, #{t.username,jdbcType=VARCHAR}, #{t.password,jdbcType=VARCHAR},
+            #{t.nickname,jdbcType=VARCHAR}, #{t.email,jdbcType=VARCHAR}, #{t.tel,jdbcType=VARCHAR},
+            #{t.gender,jdbcType=INTEGER}, #{t.qq,jdbcType=VARCHAR}, #{t.wechat,jdbcType=VARCHAR},
+            #{t.createTime,jdbcType=TIMESTAMP}, #{t.loginIp,jdbcType=VARCHAR}, #{t.loginStatus,jdbcType=INTEGER},
+            #{t.status,jdbcType=INTEGER}, #{t.token,jdbcType=VARCHAR}, #{t.address,jdbcType=VARCHAR},
+            #{t.remark,jdbcType=VARCHAR}, #{t.birth,jdbcType=TIMESTAMP}, #{t.loginTime,jdbcType=TIMESTAMP},
+            #{t.image,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatch">
+        delete from base_user where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            id
+        </foreach>)
+    </delete>
+
+    <delete id="deleteInId">
+        delete from base_user where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="personal.entity.TUser">
         update base_user
         <set>
             <if test="username != null">
@@ -233,26 +238,110 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateById" parameterType="personal.entity.TUser">
-    update base_user
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      tel = #{tel,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=INTEGER},
-      qq = #{qq,jdbcType=VARCHAR},
-      wechat = #{wechat,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      login_ip = #{loginIp,jdbcType=VARCHAR},
-      login_status = #{loginStatus,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      token = #{token,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR},
-      birth = #{birth,jdbcType=TIMESTAMP},
-      login_time = #{loginTime,jdbcType=TIMESTAMP},
-      image = #{image,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
+
+    <update id="updateBatch">
+        update base_user set
+        username=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.username,jdbcType=VARCHAR}
+        </foreach>
+        ,password=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.password,jdbcType=VARCHAR}
+        </foreach>
+        ,nickname=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.nickname,jdbcType=VARCHAR}
+        </foreach>
+        ,email=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.email,jdbcType=VARCHAR}
+        </foreach>
+        ,tel=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.tel,jdbcType=VARCHAR}
+        </foreach>
+        ,gender=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.gender,jdbcType=INTEGER}
+        </foreach>
+        ,qq=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.qq,jdbcType=VARCHAR}
+        </foreach>
+        ,wechat=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.wechat,jdbcType=VARCHAR}
+        </foreach>
+        ,create_time=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.createTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,login_ip=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.loginIp,jdbcType=VARCHAR}
+        </foreach>
+        ,login_status=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.loginStatus,jdbcType=INTEGER}
+        </foreach>
+        ,status=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.status,jdbcType=INTEGER}
+        </foreach>
+        ,token=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.token,jdbcType=VARCHAR}
+        </foreach>
+        ,address=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.address,jdbcType=VARCHAR}
+        </foreach>
+        ,remark=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.remark,jdbcType=VARCHAR}
+        </foreach>
+        ,birth=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.birth,jdbcType=TIMESTAMP}
+        </foreach>
+        ,login_time=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.loginTime,jdbcType=VARCHAR}
+        </foreach>
+        ,image=
+        <foreach collection="ts" item="t" index="index" separator=" " open="case id" close="end">
+            when #{t.id,jdbcType=VARCHAR} then #{t.image,jdbcType=VARCHAR}
+        </foreach>
+        where ID in
+        <foreach collection="ts" index="index" item="t" separator="," open="(" close=")">
+            #{t.id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <select id="getInId" resultType="personal.entity.TUser">
+        select
+        <include refid="Base_Column_List"/>
+        from base_user where id = #{id}
+    </select>
+
+    <select id="listInIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            id
+        </foreach>)
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_user
+    </select>
+
+    <select id="countInId">
+        select count(*) from base_user
+    </select>
+
 </mapper>

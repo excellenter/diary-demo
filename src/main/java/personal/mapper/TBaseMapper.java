@@ -1,16 +1,33 @@
 package personal.mapper;
 
-public interface TBaseMapper<T, PK> {
+import org.apache.ibatis.annotations.Param;
 
-    Integer deleteById(PK id);
+import java.util.List;
+
+public interface TBaseMapper<T, ID> {
 
     Integer insert(T t);
 
-    Integer insertSelective(T t);
+    Integer insertBatch(@Param("ts") List<T> ts);
 
-    T getById(PK id);
+    Integer deleteBatchInId(@Param("ids") List<ID> ids);
 
-    Integer updateByIdSelective(T t);
+    Integer deleteInId(ID id);
 
-    Integer updateById(T t);
+    Integer update(T t);
+
+    Integer updateBatch(@Param("ts") List<T> ts);
+
+    T getInId(ID id);
+
+    List<T> listInIds(@Param("ids") List<ID> ids);
+
+    /**
+     * 查询所有(无分页慎用)
+     *
+     * @return
+     */
+    List<T> list();
+
+    Long countInId(ID id);
 }

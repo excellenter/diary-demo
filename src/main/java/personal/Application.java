@@ -1,4 +1,4 @@
-package personal.diarydemo;
+package personal;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("personal.mapper")
-public class DiaryDemoApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(DiaryDemoApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }
