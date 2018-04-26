@@ -7,65 +7,69 @@
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, remark
-  </sql>
-    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from base_role
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <delete id="deleteById" parameterType="java.lang.Long">
-    delete from base_role
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
+        id, name, remark
+    </sql>
     <insert id="insert" parameterType="personal.entity.TRole">
-    insert into base_role (id, name, remark
-      )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
-      )
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TRole">
         insert into base_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="name != null">
-                name,
-            </if>
+            id,
+            name,
             <if test="remark != null">
                 remark,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
+        <trim prefix="select " suffix=" from dual" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
         </trim>
+        <!-- id, name 不允许重复 -->
+        where (select count(*) from base_role where id = #{id,jdbcType=VARCHAR} or name = #{name,jdbcType=VARCHAR})=0
     </insert>
-    <update id="updateByIdSelective" parameterType="personal.entity.TRole">
+
+    <delete id="deleteBatchInId">
+        delete from base_role where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </delete>
+    <delete id="deleteInId">
+        delete fron base_role where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="personal.entity.TRole">
         update base_role
         <set>
             <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+                name = #{name,jdbcType=VARCHAR}
             </if>
             <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
+                remark = #{remark,jdbcType=VARCHAR}
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateById" parameterType="personal.entity.TRole">
-    update base_role
-    set name = #{name,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
+    <select id="getInId" resultType="personal.entity.TRole">
+        select
+        <include refid="Base_Column_List"/>
+        from base_role where id = #{id}
+    </select>
+
+    <select id="listInIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_role
+    </select>
 </mapper>

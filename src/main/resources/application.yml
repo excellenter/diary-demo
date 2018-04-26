@@ -33,4 +33,11 @@ mybatis:
   type-aliases-package: personal.entity
   mapper-locations: classpath:mapping/*Mapper.xml
 
+logging:
+  level:
+    personal:
+      mapper: DEBUG
+
+
+
 

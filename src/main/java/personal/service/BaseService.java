@@ -1,31 +1,23 @@
 package personal.service;
 
+import com.github.pagehelper.PageInfo;
+
 import java.util.List;
+import java.util.Map;
 
 public interface BaseService<T, ID> {
 
-    Integer insert(T t);
+    Map<String, Object> insert(T t);
 
-    Integer insertBatch(List<T> ts);
+    Map<String, Object> deleteBatchInId(String ids);
 
-    Integer deleteBatchInId(List<ID> ids);
+    Map<String, Object> deleteInId(ID id);
 
-    Integer deleteInId(ID id);
-
-    Integer update(T t);
-
-    Integer updateBatch(List<T> ts);
+    Map<String, Object> update(T t);
 
     T getInId(ID id);
 
-    List<T> listInIds(List<ID> ids);
+    List<T> listInIds(String ids);
 
-    /**
-     * 查询所有(无分页慎用)
-     *
-     * @return
-     */
-    List<T> list();
-
-    Long countInId(ID id);
+    PageInfo<T> list(Integer pageNo, Integer pageSize);
 }
