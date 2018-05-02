@@ -3,6 +3,7 @@ package personal.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import personal.entity.TUser;
+import personal.mapper.TUserGroupMapper;
 import personal.mapper.TUserMapper;
 import personal.mapper.TUserRoleMapper;
 import personal.service.UserService;
@@ -19,6 +20,9 @@ public class UserServiceImpl extends BaseServiceImpl<TUser, String> implements U
 
     @Autowired
     private TUserRoleMapper userRoleMapper;
+
+    @Autowired
+    private TUserGroupMapper userGroupMapper;
 
     @Override
     public Map<String, Object> insert(TUser user) {
@@ -59,11 +63,7 @@ public class UserServiceImpl extends BaseServiceImpl<TUser, String> implements U
         TUser user = userMapper.getUserByTel(map);
         map.clear();
         if (null != user) {
-            map.put("code", 200);
-            map.put("message", "登陆成功");
-            map.put("user", user);
-            //获取角色
-            map.put("role", userRoleMapper.getRoleByUser(user.getId()));
+            generateUserMap(user, map);
         } else {
             map.put("code", 216);
             map.put("message", "手机号码不存在或密码错误");
@@ -79,13 +79,27 @@ public class UserServiceImpl extends BaseServiceImpl<TUser, String> implements U
         TUser user = userMapper.getUserByEmail(map);
         map.clear();
         if (null != user) {
-            map.put("code", 200);
-            map.put("message", "登陆成功");
-            map.put("user", user);
+            generateUserMap(user, map);
         } else {
             map.put("code", 216);
             map.put("message", "邮箱不存在或密码错误");
         }
         return map;
+    }
+
+    /**
+     * 封装用户信息
+     *
+     * @param user
+     * @param map
+     */
+    private void generateUserMap(TUser user, Map<String, Object> map) {
+        map.put("code", 200);
+        map.put("message", "登陆成功");
+        map.put("user", user);
+        //获取角色
+        map.put("role", userRoleMapper.getRoleByUser(user.getId()));
+        //获取群组
+        map.put("group", userGroupMapper.getGroupByUser(user.getId()));
     }
 }

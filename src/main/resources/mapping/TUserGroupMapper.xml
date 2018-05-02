@@ -5,27 +5,21 @@
         <result column="user_id" jdbcType="VARCHAR" property="userId"/>
         <result column="group_id" jdbcType="BIGINT" property="groupId"/>
     </resultMap>
-    <insert id="insert" parameterType="personal.entity.TUserGroup">
-    insert into base_user_group (user_id, group_id)
-    values (#{userId,jdbcType=VARCHAR}, #{groupId,jdbcType=BIGINT})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TUserGroup">
-        insert into base_user_group
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                user_id,
-            </if>
-            <if test="groupId != null">
-                group_id,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                #{userId,jdbcType=VARCHAR},
-            </if>
-            <if test="groupId != null">
-                #{groupId,jdbcType=BIGINT},
-            </if>
-        </trim>
+    <insert id="insert" parameterType="personal.entity.TUserRole">
+        insert into base_user_group (user_id, group_id)
+        select #{userId,jdbcType=VARCHAR}, #{groupId,jdbcType=BIGINT} from dual where (select count(*) from base_user_group
+        where user_id=#{userId,jdbcType=VARCHAR} and group_id=#{groupId,jdbcType=BIGINT})=0
     </insert>
+
+    <select id="getGroupByUser" resultType="java.util.Map">
+        select ug.group_id,g.name from base_user_group ug, base_group g where ug.group_id=g.id and ug.user_id=#{id, jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByUserAndGroup">
+        delete from base_user_group where user_id = #{user_id, jdbcType=VARCHAR} and group_id = #{group_id, jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByUser">
+        delete from base_user_group where user_id = #{user_id, jdbcType=VARCHAR}
+    </delete>
 </mapper>

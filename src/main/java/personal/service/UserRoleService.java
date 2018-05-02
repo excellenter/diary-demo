@@ -11,5 +11,5 @@ public interface UserRoleService extends BaseService<TUserRole, Long> {
 
     Map<String, Object> deleteByUser(String userId);
 
-    Map<String, Object> deleteNyUserAndRole(TUserRole userRole);
+    Map<String, Object> deleteByUserAndRole(TUserRole userRole);
 }
