@@ -8,75 +8,76 @@
         <result column="path" jdbcType="VARCHAR" property="path"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, type, path
-  </sql>
-    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from base_resource
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <delete id="deleteById" parameterType="java.lang.Long">
-    delete from base_resource
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
+        id, name, type, path
+    </sql>
+
     <insert id="insert" parameterType="personal.entity.TResource">
-    insert into base_resource (id, name, type, 
-      path)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{path,jdbcType=VARCHAR})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TResource">
         insert into base_resource
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
+            id,
+            name,
+            <if test="remark != null">
+                remark,
             </if>
-            <if test="name != null">
-                name,
-            </if>
-            <if test="type != null">
-                type,
-            </if>
-            <if test="path != null">
-                path,
-            </if>
+            path,
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
+        <trim prefix="select " suffix=" from dual" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            #{name,jdbcType=VARCHAR},
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="type != null">
-                #{type,jdbcType=VARCHAR},
-            </if>
-            <if test="path != null">
-                #{path,jdbcType=VARCHAR},
-            </if>
+            path,
         </trim>
+        <!-- id 不允许重复 -->
+        where (select count(*) from base_resource where id = #{id,jdbcType=BIGINT})=0
     </insert>
-    <update id="updateByIdSelective" parameterType="personal.entity.TResource">
+
+    <delete id="deleteBatchInId">
+        delete from base_resource where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </delete>
+
+    <delete id="deleteInId">
+        delete from base_resource where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="personal.entity.TResource">
         update base_resource
         <set>
             <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+                name = #{name,jdbcType=VARCHAR}
             </if>
-            <if test="type != null">
-                type = #{type,jdbcType=VARCHAR},
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR}
             </if>
             <if test="path != null">
-                path = #{path,jdbcType=VARCHAR},
+                path = #{path,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateById" parameterType="personal.entity.TResource">
-    update base_resource
-    set name = #{name,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR},
-      path = #{path,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
+    <select id="getInId" resultType="personal.entity.TGroup">
+        select
+        <include refid="Base_Column_List"/>
+        from base_resource where id = #{id}
+    </select>
+
+    <select id="listInIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_resource where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_resource
+    </select>
 </mapper>

@@ -3,11 +3,13 @@ package personal.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import personal.mapper.TBaseMapper;
 import personal.service.BaseService;
 
 import java.util.*;
 
+@Service
 public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
 
     @Autowired

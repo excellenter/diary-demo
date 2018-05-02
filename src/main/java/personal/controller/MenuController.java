@@ -5,58 +5,58 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import personal.entity.TGroup;
-import personal.service.GroupService;
+import personal.entity.TMenu;
+import personal.service.MenuService;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/group")
-@Api(value = "group", description = "群组")
-public class GroupController {
+@RequestMapping("/menu")
+@Api(value = "menu", description = "菜单权限")
+public class MenuController {
 
     @Autowired
-    private GroupService groupService;
+    private MenuService menuService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "获取")
-    public TGroup get(@PathVariable Long id) {
-        return groupService.getInId(id);
+    public TMenu get(@PathVariable Long id) {
+        return menuService.getInId(id);
     }
 
     @RequestMapping(value = "/{pageNo}/{pageSize}", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "分页查询")
-    public PageInfo<TGroup> list(@PathVariable Integer pageNo, @PathVariable Integer pageSize) {
-        return groupService.list(pageNo, pageSize);
+    public PageInfo<TMenu> list(@PathVariable Integer pageNo, @PathVariable Integer pageSize) {
+        return menuService.list(pageNo, pageSize);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "新增")
-    public Map<String, Object> create(TGroup group) {
-        return groupService.insert(group);
+    public Map<String, Object> create(TMenu menu) {
+        return menuService.insert(menu);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "删除")
     public Map<String, Object> delete(Long id) {
-        return groupService.deleteInId(id);
+        return menuService.deleteInId(id);
     }
 
     @RequestMapping(value = "/deleteBatch", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "批量删除")
     public Map<String, Object> deleteBatch(String ids) {
-        return groupService.deleteBatchInId(ids);
+        return menuService.deleteBatchInId(ids);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "更新")
-    public Map<String, Object> update(TGroup group) {
-        return groupService.update(group);
+    public Map<String, Object> update(TMenu menu) {
+        return menuService.update(menu);
     }
 }

@@ -19,14 +19,14 @@
             </if>
         </trim>
         <trim prefix="select " suffix=" from dual" suffixOverrides=",">
-            #{id,jdbcType=VARCHAR},
+            #{id,jdbcType=BIGINT},
             #{name,jdbcType=VARCHAR},
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
         </trim>
         <!-- id, name 不允许重复 -->
-        where (select count(*) from base_role where id = #{id,jdbcType=VARCHAR} or name = #{name,jdbcType=VARCHAR})=0
+        where (select count(*) from base_role where id = #{id,jdbcType=BIGINT} or name = #{name,jdbcType=VARCHAR})=0
     </insert>
 
     <delete id="deleteBatchInId">
@@ -50,7 +50,7 @@
                 remark = #{remark,jdbcType=VARCHAR}
             </if>
         </set>
-        where id = #{id,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
     </update>
 
     <select id="getInId" resultType="personal.entity.TRole">

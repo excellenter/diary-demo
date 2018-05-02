@@ -5,27 +5,5 @@
         <result column="permission_id" jdbcType="BIGINT" property="permissionId"/>
         <result column="resource_id" jdbcType="BIGINT" property="resourceId"/>
     </resultMap>
-    <insert id="insert" parameterType="personal.entity.TPermissionResource">
-    insert into base_permission_resource (permission_id, resource_id)
-    values (#{permissionId,jdbcType=BIGINT}, #{resourceId,jdbcType=BIGINT})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TPermissionResource">
-        insert into base_permission_resource
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="permissionId != null">
-                permission_id,
-            </if>
-            <if test="resourceId != null">
-                resource_id,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="permissionId != null">
-                #{permissionId,jdbcType=BIGINT},
-            </if>
-            <if test="resourceId != null">
-                #{resourceId,jdbcType=BIGINT},
-            </if>
-        </trim>
-    </insert>
+
 </mapper>

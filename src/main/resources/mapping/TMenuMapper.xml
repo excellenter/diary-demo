@@ -10,95 +10,87 @@
         <result column="url" jdbcType="VARCHAR" property="url"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, code, pid, remark, url
-  </sql>
-    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from base_menu
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <delete id="deleteById" parameterType="java.lang.Long">
-    delete from base_menu
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
+        id, name, code, pid, remark, url
+    </sql>
+
     <insert id="insert" parameterType="personal.entity.TMenu">
-    insert into base_menu (id, name, code, 
-      pid, remark, url)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
-      #{pid,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TMenu">
         insert into base_menu
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="name != null">
-                name,
-            </if>
-            <if test="code != null">
-                code,
-            </if>
-            <if test="pid != null">
-                pid,
-            </if>
+            id,
+            name,
+            code,
+            pid,
             <if test="remark != null">
                 remark,
             </if>
-            <if test="url != null">
-                url,
-            </if>
+            url,
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="code != null">
-                #{code,jdbcType=VARCHAR},
-            </if>
-            <if test="pid != null">
-                #{pid,jdbcType=BIGINT},
-            </if>
+        <trim prefix="select " suffix=" from dual" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            #{name,jdbcType=VARCHAR},
+            #{code,jdbcType=VARCHAR},
+            #{pid,jdbcType=BIGINT},
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="url != null">
-                #{url,jdbcType=VARCHAR},
-            </if>
+            #{url,jdbcType=VARCHAR},
         </trim>
+        <!-- id, code, url 不允许重复 -->
+        where (select count(*) from base_menu where id = #{id,jdbcType=BIGINT} or code = #{code,jdbcType=VARCHAR} or
+        url = #{url,jdbcType=VARCHAR})=0
     </insert>
-    <update id="updateByIdSelective" parameterType="personal.entity.TMenu">
+
+    <delete id="deleteBatchInId">
+        delete from base_menu where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </delete>
+
+    <delete id="deleteInId">
+        delete from base_menu where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="personal.entity.TMenu">
         update base_menu
         <set>
             <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+                name = #{name,jdbcType=VARCHAR}
             </if>
             <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
+                code = #{code,jdbcType=VARCHAR}
             </if>
             <if test="pid != null">
-                pid = #{pid,jdbcType=BIGINT},
+                pid = #{pid,jdbcType=BIGINT}
             </if>
             <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
+                remark = #{remark,jdbcType=VARCHAR}
             </if>
             <if test="url != null">
-                url = #{url,jdbcType=VARCHAR},
+                url = #{url,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateById" parameterType="personal.entity.TMenu">
-    update base_menu
-    set name = #{name,jdbcType=VARCHAR},
-      code = #{code,jdbcType=VARCHAR},
-      pid = #{pid,jdbcType=BIGINT},
-      remark = #{remark,jdbcType=VARCHAR},
-      url = #{url,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
+    <select id="getInId" resultType="personal.entity.TMenu">
+        select
+        <include refid="Base_Column_List"/>
+        from base_menu where id = #{id}
+    </select>
+
+    <select id="listInIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_menu where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_menu
+    </select>
 </mapper>

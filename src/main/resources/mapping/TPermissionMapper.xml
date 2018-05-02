@@ -8,75 +8,76 @@
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, type, remark
-  </sql>
-    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from base_permission
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <delete id="deleteById" parameterType="java.lang.Long">
-    delete from base_permission
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
+        id, name, type, remark
+    </sql>
+
     <insert id="insert" parameterType="personal.entity.TPermission">
-    insert into base_permission (id, name, type, 
-      remark)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TPermission">
         insert into base_permission
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="name != null">
-                name,
-            </if>
-            <if test="type != null">
-                type,
-            </if>
+            id,
+            name,
+            type,
             <if test="remark != null">
                 remark,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="type != null">
-                #{type,jdbcType=VARCHAR},
-            </if>
+        <trim prefix="select " suffix=" from dual" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            #{name,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
         </trim>
+        <!-- id 不允许重复 -->
+        where (select count(*) from base_permission where id = #{id,jdbcType=BIGINT})=0
     </insert>
-    <update id="updateByIdSelective" parameterType="personal.entity.TPermission">
+
+    <delete id="deleteBatchInId">
+        delete from base_permission where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </delete>
+
+    <delete id="deleteInId">
+        delete from base_permission where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="personal.entity.TPermission">
         update base_permission
         <set>
             <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+                name = #{name,jdbcType=VARCHAR}
             </if>
             <if test="type != null">
-                type = #{type,jdbcType=VARCHAR},
+                type = #{type,jdbcType=VARCHAR}
             </if>
             <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
+                remark = #{remark,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateById" parameterType="personal.entity.TPermission">
-    update base_permission
-    set name = #{name,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
+    <select id="getInId" resultType="personal.entity.TPermission">
+        select
+        <include refid="Base_Column_List"/>
+        from base_permission where id = #{id}
+    </select>
+
+    <select id="listInIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_permission where id in (
+        <foreach collection="ids" item="id" index="index" separator=",">
+            #{id}
+        </foreach>)
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_permission
+    </select>
 </mapper>

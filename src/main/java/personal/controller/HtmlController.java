@@ -5,58 +5,58 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import personal.entity.TGroup;
-import personal.service.GroupService;
+import personal.entity.THtml;
+import personal.service.HtmlService;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/group")
-@Api(value = "group", description = "群组")
-public class GroupController {
+@RequestMapping("/html")
+@Api(value = "html", description = "网页元素权限")
+public class HtmlController {
 
     @Autowired
-    private GroupService groupService;
+    private HtmlService htmlService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "获取")
-    public TGroup get(@PathVariable Long id) {
-        return groupService.getInId(id);
+    public THtml get(@PathVariable Long id) {
+        return htmlService.getInId(id);
     }
 
     @RequestMapping(value = "/{pageNo}/{pageSize}", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "分页查询")
-    public PageInfo<TGroup> list(@PathVariable Integer pageNo, @PathVariable Integer pageSize) {
-        return groupService.list(pageNo, pageSize);
+    public PageInfo<THtml> list(@PathVariable Integer pageNo, @PathVariable Integer pageSize) {
+        return htmlService.list(pageNo, pageSize);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "新增")
-    public Map<String, Object> create(TGroup group) {
-        return groupService.insert(group);
+    public Map<String, Object> create(THtml html) {
+        return htmlService.insert(html);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "删除")
     public Map<String, Object> delete(Long id) {
-        return groupService.deleteInId(id);
+        return htmlService.deleteInId(id);
     }
 
     @RequestMapping(value = "/deleteBatch", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "批量删除")
     public Map<String, Object> deleteBatch(String ids) {
-        return groupService.deleteBatchInId(ids);
+        return htmlService.deleteBatchInId(ids);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "更新")
-    public Map<String, Object> update(TGroup group) {
-        return groupService.update(group);
+    public Map<String, Object> update(THtml html) {
+        return htmlService.update(html);
     }
 }
