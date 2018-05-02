@@ -35,8 +35,9 @@
             #{id}
         </foreach>)
     </delete>
+
     <delete id="deleteInId">
-        delete fron base_role where id = #{id}
+        delete from base_role where id = #{id}
     </delete>
 
     <update id="update" parameterType="personal.entity.TRole">
@@ -61,7 +62,7 @@
     <select id="listInIds" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from where id in (
+        from base_group where id in (
         <foreach collection="ids" item="id" index="index" separator=",">
             #{id}
         </foreach>)

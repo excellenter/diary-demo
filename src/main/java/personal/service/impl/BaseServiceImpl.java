@@ -2,6 +2,7 @@ package personal.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import personal.mapper.TBaseMapper;
 import personal.service.BaseService;
 
@@ -9,15 +10,13 @@ import java.util.*;
 
 public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
 
-    public BaseServiceImpl() {
-    }
-
-    public abstract TBaseMapper<T, ID> getBaseMapper();
+    @Autowired
+    private TBaseMapper<T, ID> baseMapper;
 
     @Override
     public Map<String, Object> insert(T t) {
         Map<String, Object> map = new HashMap<>(4);
-        if (getBaseMapper().insert(t) > 0) {
+        if (baseMapper.insert(t) > 0) {
             map.put("code", 200);
         } else {
             map.put("code", 216);
@@ -34,7 +33,7 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
             for (ID id : (ID[]) ids.split(",")) {
                 list.add(id);
             }
-            if (getBaseMapper().deleteBatchInId(list) > 0) {
+            if (baseMapper.deleteBatchInId(list) > 0) {
                 map.put("code", 200);
             } else {
                 map.put("code", 216);
@@ -50,7 +49,7 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
     @Override
     public Map<String, Object> deleteInId(ID id) {
         Map<String, Object> map = new HashMap<>(4);
-        if (getBaseMapper().deleteInId(id) > 0) {
+        if (baseMapper.deleteInId(id) > 0) {
             map.put("code", 200);
         } else {
             map.put("code", 216);
@@ -62,7 +61,7 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
     @Override
     public Map<String, Object> update(T t) {
         Map<String, Object> map = new HashMap<>(4);
-        if (getBaseMapper().update(t) > 0) {
+        if (baseMapper.update(t) > 0) {
             map.put("code", 200);
         } else {
             map.put("code", 216);
@@ -73,7 +72,7 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
 
     @Override
     public T getInId(ID id) {
-        return getBaseMapper().getInId(id);
+        return baseMapper.getInId(id);
     }
 
     @Override
@@ -82,13 +81,13 @@ public abstract class BaseServiceImpl<T, ID> implements BaseService<T, ID> {
         for (ID id : (ID[]) ids.split(",")) {
             list.add(id);
         }
-        return getBaseMapper().listInIds(list);
+        return baseMapper.listInIds(list);
     }
 
     @Override
     public PageInfo<T> list(Integer pageNo, Integer pageSize) {
         PageHelper.startPage(pageNo, pageSize);
-        PageInfo<T> pageInfo = new PageInfo<>(getBaseMapper().list());
+        PageInfo<T> pageInfo = new PageInfo<>(baseMapper.list());
         return pageInfo;
     }
 }

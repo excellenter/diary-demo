@@ -15,6 +15,7 @@ import java.util.Map;
 @RequestMapping("/login")
 @Api(value = "登陆接口", description = "手机登录,菜单登陆")
 public class LoginController {
+
     @Autowired
     private UserService userService;
 

@@ -9,12 +9,4 @@ import personal.service.RoleService;
 
 @Service
 public class RoleServiceImpl extends BaseServiceImpl<TRole, Long> implements RoleService {
-
-    @Autowired
-    private TRoleMapper roleMapper;
-
-    @Override
-    public TBaseMapper<TRole, Long> getBaseMapper() {
-        return roleMapper;
-    }
 }

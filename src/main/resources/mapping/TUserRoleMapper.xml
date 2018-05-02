@@ -6,26 +6,19 @@
         <result column="role_id" jdbcType="BIGINT" property="roleId"/>
     </resultMap>
     <insert id="insert" parameterType="personal.entity.TUserRole">
-    insert into base_user_role (user_id, role_id)
-    values (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=BIGINT})
-  </insert>
-    <insert id="insertSelective" parameterType="personal.entity.TUserRole">
-        insert into base_user_role
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                user_id,
-            </if>
-            <if test="roleId != null">
-                role_id,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                #{userId,jdbcType=VARCHAR},
-            </if>
-            <if test="roleId != null">
-                #{roleId,jdbcType=BIGINT},
-            </if>
-        </trim>
+        insert into base_user_role (user_id, role_id)
+        values (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=BIGINT})
     </insert>
+
+    <select id="getRoleByUser" resultType="java.util.Map">
+        select ur.role_id,r.name from base_user_role ur, base_role r where ur.role_id=r.id and ur.user_id=#{id, jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByUserAndRole">
+        delete from base_user_role where user_id = #{user_id, jdbcType=VARCHAR} and role_id and #{role_id, jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByUser">
+        delete from base_user_role where user_id = #{user_id, jdbcType=VARCHAR}
+    </delete>
 </mapper>

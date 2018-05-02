@@ -3,8 +3,8 @@ package personal.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import personal.entity.TUser;
-import personal.mapper.TBaseMapper;
 import personal.mapper.TUserMapper;
+import personal.mapper.TUserRoleMapper;
 import personal.service.UserService;
 import personal.tool.MD5;
 
@@ -17,10 +17,8 @@ public class UserServiceImpl extends BaseServiceImpl<TUser, String> implements U
     @Autowired
     private TUserMapper userMapper;
 
-    @Override
-    public TBaseMapper<TUser, String> getBaseMapper() {
-        return userMapper;
-    }
+    @Autowired
+    private TUserRoleMapper userRoleMapper;
 
     @Override
     public Map<String, Object> insert(TUser user) {
@@ -64,6 +62,8 @@ public class UserServiceImpl extends BaseServiceImpl<TUser, String> implements U
             map.put("code", 200);
             map.put("message", "登陆成功");
             map.put("user", user);
+            //获取角色
+            map.put("role", userRoleMapper.getRoleByUser(user.getId()));
         } else {
             map.put("code", 216);
             map.put("message", "手机号码不存在或密码错误");
