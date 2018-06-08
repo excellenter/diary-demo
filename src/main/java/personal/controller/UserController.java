@@ -20,8 +20,8 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    @ApiOperation("获取单个用户")
-    public TUser getUser(@PathVariable String id) {
+    @ApiOperation("获取")
+    public TUser get(@PathVariable String id) {
         return userService.getInId(id);
     }
 
@@ -34,29 +34,29 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation("新增用户")
-    public Map<String, Object> createUser(TUser user) {
+    @ApiOperation("新增")
+    public Map<String, Object> create(TUser user) {
         return userService.insert(user);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation("删除用户")
-    public Map<String, Object> deleteUser(String id) {
+    @ApiOperation("删除")
+    public Map<String, Object> delete(String id) {
         return userService.deleteInId(id);
     }
 
     @RequestMapping(value = "/deleteBatch", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation("批量删除用户")
-    public Map<String, Object> deleteUserBatch(String ids) {
+    @ApiOperation("批量删除")
+    public Map<String, Object> deleteBatch(String ids) {
         return userService.deleteBatchInId(ids);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation("更新用户")
-    public Map<String, Object> updateUser(TUser user) {
+    @ApiOperation("更新")
+    public Map<String, Object> update(TUser user) {
         return userService.update(user);
     }
 }

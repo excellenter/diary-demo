@@ -20,8 +20,8 @@ public class RoleController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    @ApiOperation(value = "获取角色")
-    public TRole getRole(@PathVariable Long id) {
+    @ApiOperation(value = "获取")
+    public TRole get(@PathVariable Long id) {
         return roleService.getInId(id);
     }
 
@@ -34,29 +34,29 @@ public class RoleController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation(value = "新增角色")
-    public Map<String, Object> createRole(TRole role) {
+    @ApiOperation(value = "新增")
+    public Map<String, Object> create(TRole role) {
         return roleService.insert(role);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation(value = "删除角色")
-    public Map<String, Object> deleteRole(Long id) {
+    @ApiOperation(value = "删除")
+    public Map<String, Object> delete(Long id) {
         return roleService.deleteInId(id);
     }
 
     @RequestMapping(value = "/deleteBatch", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation(value = "批量删除角色")
-    public Map<String, Object> deleteUserBatch(String ids) {
+    @ApiOperation(value = "批量删除")
+    public Map<String, Object> deleteBatch(String ids) {
         return roleService.deleteBatchInId(ids);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation(value = "更新角色")
-    public Map<String, Object> updateUser(TRole role) {
+    @ApiOperation(value = "更新")
+    public Map<String, Object> update(TRole role) {
         return roleService.update(role);
     }
 }
